@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025年四川省高校招生志愿筛选系统</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>2025年四川省高校招生志愿筛选系统</h1>
+            <p>本科批次A段地方专项计划第二次、本科批次B段第一次征集志愿</p>
+        </div>
+
+        <div class="filter-section">
+            <div class="filter-grid">
+                <div class="filter-group">
+                    <h3>专业类型</h3>
+                    <div class="checkbox-group" id="typeFilters">
+                        <!-- 动态生成 -->
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <h3>专业名称</h3>
+                    <button class="select-button" id="majorSelectBtn">选择专业</button>
+                    <div class="selected-tags" id="selectedMajors"></div>
+                </div>
+
+                <div class="filter-group">
+                    <h3>省份</h3>
+                    <button class="select-button" id="provinceSelectBtn">选择省份</button>
+                    <div class="selected-tags" id="selectedProvinces"></div>
+                </div>
+
+                <div class="filter-group">
+                    <h3>城市</h3>
+                    <button class="select-button" id="citySelectBtn">选择城市</button>
+                    <div class="selected-tags" id="selectedCities"></div>
+                </div>
+
+                <div class="filter-group">
+                    <h3>计划招生人数</h3>
+                    <div class="input-group">
+                        <input type="number" id="minPlanCount" placeholder="最少人数" min="1">
+                        <span>-</span>
+                        <input type="number" id="maxPlanCount" placeholder="最多人数" min="1">
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <h3>收费标准（元/年）</h3>
+                    <div class="input-group">
+                        <input type="number" id="minFee" placeholder="最低收费" min="0">
+                        <span>-</span>
+                        <input type="number" id="maxFee" placeholder="最高收费" min="0">
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-actions">
+                <button class="btn btn-primary" onclick="applyFilters()">筛选</button>
+                <button class="btn btn-secondary" onclick="resetFilters()">重置</button>
+            </div>
+        </div>
+
+        <div class="results-section">
+            <div class="results-header">
+                <div class="results-count" id="resultsCount">共找到 0 条记录</div>
+                <select class="sort-select" id="sortSelect" onchange="sortResults()">
+                    <option value="default">默认排序</option>
+                    <option value="planCount-desc">招生人数（多到少）</option>
+                    <option value="planCount-asc">招生人数（少到多）</option>
+                    <option value="fee-asc">收费（低到高）</option>
+                    <option value="fee-desc">收费（高到低）</option>
+                    <option value="name-asc">学校名称（A-Z）</option>
+                </select>
+            </div>
+
+            <div class="results-grid" id="resultsGrid">
+                <!-- 动态生成结果 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 省份选择弹窗 -->
+    <div id="provinceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>选择省份</h3>
+                <span class="close" id="provinceModalClose">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="provinceOptions" class="checkbox-group">
+                    <!-- 动态生成 -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="provinceConfirm">确定</button>
+                <button class="btn btn-secondary" id="provinceCancel">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 城市选择弹窗 -->
+    <div id="cityModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>选择城市</h3>
+                <span class="close" id="cityModalClose">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="cityOptions" class="checkbox-group">
+                    <!-- 动态生成 -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="cityConfirm">确定</button>
+                <button class="btn btn-secondary" id="cityCancel">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 专业选择弹窗 -->
+    <div id="majorModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>选择专业</h3>
+                <span class="close" id="majorModalClose">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="majorOptions" class="checkbox-group">
+                    <!-- 动态生成 -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="majorConfirm">确定</button>
+                <button class="btn btn-secondary" id="majorCancel">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="schools.js"></script>
+    <script src="majors.js"></script>
+    <script src="index.js"></script>
+</body>
+</html>
