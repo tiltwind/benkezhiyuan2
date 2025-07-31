@@ -391,35 +391,88 @@ body {
     border-bottom: none;
 }
 
+/* AI分析相关样式 */
+.ai-score {
+    font-weight: bold;
+    text-align: center;
+    color: #2563eb;
+}
+
+.ai-risk {
+    text-align: center;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.ai-risk-极低 {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.ai-risk-低 {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.ai-risk-中 {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.ai-risk-高 {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.ai-risk-unknown {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+.ai-reason,
+.ai-risks {
+    max-width: 200px;
+    font-size: 12px;
+    line-height: 1.4;
+    cursor: help;
+}
+
+.ai-reason:hover,
+.ai-risks:hover {
+    background: #f0f9ff;
+}
+
 /* 列宽优化 */
 .results-table th:nth-child(1), /* 省份 */
 .results-table td:nth-child(1) {
-    width: 7%;
+    width: 6%;
     min-width: 60px;
 }
 
 .results-table th:nth-child(2), /* 城市 */
 .results-table td:nth-child(2) {
-    width: 9%;
+    width: 8%;
     min-width: 80px;
 }
 
 .results-table th:nth-child(3), /* 学校 */
 .results-table td:nth-child(3) {
-    width: 22%;
+    width: 18%;
     min-width: 150px;
 }
 
 .results-table th:nth-child(4), /* 专业类型 */
 .results-table td:nth-child(4) {
-    width: 8%;
+    width: 6%;
     min-width: 60px;
     text-align: center;
 }
 
 .results-table th:nth-child(5), /* 专业代码 */
 .results-table td:nth-child(5) {
-    width: 8%;
+    width: 6%;
     min-width: 60px;
     text-align: center;
     font-family: monospace;
@@ -428,24 +481,46 @@ body {
 
 .results-table th:nth-child(6), /* 专业 */
 .results-table td:nth-child(6) {
-    width: 28%;
+    width: 16%;
     min-width: 180px;
 }
 
 .results-table th:nth-child(7), /* 计划招收人数 */
 .results-table td:nth-child(7) {
-    width: 9%;
+    width: 6%;
     min-width: 80px;
     text-align: center;
 }
 
 .results-table th:nth-child(8), /* 学费 */
 .results-table td:nth-child(8) {
-    width: 9%;
+    width: 6%;
     min-width: 80px;
     text-align: right;
     font-weight: 500;
     color: #dc2626;
+}
+
+.results-table th:nth-child(9), /* AI推荐分数 */
+.results-table td:nth-child(9) {
+    width: 6%;
+    text-align: center;
+}
+
+.results-table th:nth-child(10), /* AI替代风险 */
+.results-table td:nth-child(10) {
+    width: 6%;
+    text-align: center;
+}
+
+.results-table th:nth-child(11), /* 推荐理由 */
+.results-table td:nth-child(11) {
+    width: 8%;
+}
+
+.results-table th:nth-child(12), /* 风险分析 */
+.results-table td:nth-child(12) {
+    width: 8%;
 }
 
 /* 专业类型样式 */

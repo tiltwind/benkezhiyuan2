@@ -341,30 +341,63 @@ function resetFilters() {
 // 排序结果
 function sortResults() {
     const sortValue = document.getElementById('sortSelect').value;
-    let sortedResults = [...currentResults];
-
-    switch (sortValue) {
-        case 'planCount-desc':
-            sortedResults.sort((a, b) => b.planCount - a.planCount);
-            break;
-        case 'planCount-asc':
-            sortedResults.sort((a, b) => a.planCount - b.planCount);
-            break;
-        case 'fee-asc':
-            sortedResults.sort((a, b) => a.fee - b.fee);
-            break;
-        case 'fee-desc':
-            sortedResults.sort((a, b) => b.fee - a.fee);
-            break;
-        case 'name-asc':
-            sortedResults.sort((a, b) => a.name.localeCompare(b.name));
-            break;
-        default:
-            // 保持原始顺序
-            break;
+    
+    if (sortValue === 'default') {
+        displayResults(currentResults);
+        return;
     }
-
+    
+    const sortedResults = [...currentResults].sort((a, b) => {
+        switch (sortValue) {
+            case 'planCount-desc':
+                return b.planCount - a.planCount;
+            case 'planCount-asc':
+                return a.planCount - b.planCount;
+            case 'fee-desc':
+                return (b.fee || 0) - (a.fee || 0);
+            case 'fee-asc':
+                return (a.fee || 0) - (b.fee || 0);
+            case 'ai-score-desc': {
+                const aAnalysis = getMajorAiAnalysis(a.majorName);
+                const bAnalysis = getMajorAiAnalysis(b.majorName);
+                const aScore = aAnalysis ? aAnalysis.recommendationScore : 0;
+                const bScore = bAnalysis ? bAnalysis.recommendationScore : 0;
+                return bScore - aScore;
+            }
+            case 'ai-score-asc': {
+                const aAnalysis = getMajorAiAnalysis(a.majorName);
+                const bAnalysis = getMajorAiAnalysis(b.majorName);
+                const aScore = aAnalysis ? aAnalysis.recommendationScore : 0;
+                const bScore = bAnalysis ? bAnalysis.recommendationScore : 0;
+                return aScore - bScore;
+            }
+            case 'name-asc':
+                return a.name.localeCompare(b.name, 'zh-CN');
+            default:
+                return 0;
+        }
+    });
+    
     displayResults(sortedResults);
+}
+
+// 获取专业AI分析数据
+function getMajorAiAnalysis(majorName) {
+    if (typeof majorAiAnalysis === 'undefined') {
+        return null;
+    }
+    
+    // 精确匹配
+    let analysis = majorAiAnalysis.find(item => item.majorName === majorName);
+    
+    // 如果没有精确匹配，尝试模糊匹配
+    if (!analysis) {
+        analysis = majorAiAnalysis.find(item => 
+            item.majorName.includes(majorName) || majorName.includes(item.majorName)
+        );
+    }
+    
+    return analysis;
 }
 
 // 显示结果
@@ -391,21 +424,32 @@ function displayResults(results) {
                     <th>专业</th>
                     <th>计划招收人数</th>
                     <th>学费(元/年)</th>
+                    <th>AI推荐分数</th>
+                    <th>AI替代风险</th>
+                    <th>推荐理由</th>
+                    <th>风险分析</th>
                 </tr>
             </thead>
             <tbody>
-                ${results.map(item => `
-                    <tr>
-                        <td>${item.province}</td>
-                        <td>${item.city}</td>
-                        <td>${item.name}</td>
-                        <td>${item.subject}</td>
-                        <td>${item.majorCode}</td>
-                        <td>${item.majorName}</td>
-                        <td>${item.planCount}</td>
-                        <td>${item.fee ? item.fee.toLocaleString() : '待定'}</td>
-                    </tr>
-                `).join('')}
+                ${results.map(item => {
+                    const aiAnalysis = getMajorAiAnalysis(item.majorName);
+                    return `
+                        <tr>
+                            <td>${item.province}</td>
+                            <td>${item.city}</td>
+                            <td>${item.name}</td>
+                            <td>${item.subject}</td>
+                            <td>${item.majorCode}</td>
+                            <td>${item.majorName}</td>
+                            <td>${item.planCount}</td>
+                            <td>${item.fee ? item.fee.toLocaleString() : '待定'}</td>
+                            <td class="ai-score">${aiAnalysis ? aiAnalysis.recommendationScore : '-'}</td>
+                            <td class="ai-risk ai-risk-${aiAnalysis ? aiAnalysis.aiReplacementRisk : 'unknown'}">${aiAnalysis ? aiAnalysis.aiReplacementRisk : '-'}</td>
+                            <td class="ai-reason" title="${aiAnalysis ? aiAnalysis.aiRecommendationReason : ''}">${aiAnalysis && aiAnalysis.aiRecommendationReason ? (aiAnalysis.aiRecommendationReason.length > 50 ? aiAnalysis.aiRecommendationReason.substring(0, 50) + '...' : aiAnalysis.aiRecommendationReason) : '-'}</td>
+                            <td class="ai-risks" title="${aiAnalysis ? aiAnalysis.risks : ''}">${aiAnalysis && aiAnalysis.risks ? (aiAnalysis.risks.length > 50 ? aiAnalysis.risks.substring(0, 50) + '...' : aiAnalysis.risks) : '-'}</td>
+                        </tr>
+                    `;
+                }).join('')}
             </tbody>
         </table>
     `;
